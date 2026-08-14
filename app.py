@@ -38,7 +38,7 @@ if "my_closet" not in tf.session_state:
 tf.title("🛍️ DRESS ME UP 🛍️")
 
 # Sol Menü - Güvenli AI Girişi
-api_key = tf.sidebar.text_input("Enter Gemini API Key (Free)", type="password")
+api_key = AIzaSyAQ.Ab8RN6J2MCIOhjUzKJ8hOcoo2ZbGgDfR9jlPV6l6oWIHBHX_HA
 if api_key:
     gemini.configure(api_key=api_key)
 
