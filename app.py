@@ -1,6 +1,5 @@
 import streamlit as tf
 import google.generativeai as gemini
-import json
 
 # Page Config & Pink Clueless Theme
 tf.set_page_config(page_title="Dress Me Up - Clueless Wardrobe", page_icon="🛍️", layout="centered")
@@ -28,7 +27,7 @@ tf.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 💾 KALICI TARAYICI HAFIZASI (Local Storage Simülasyonu)
+# 💾 KALICI TARAYICI HAFIZASI
 if "my_closet" not in tf.session_state:
     tf.session_state.my_closet = [
         {"name": "Pink Power Blazer", "cat": "Outerwear"},
@@ -37,12 +36,13 @@ if "my_closet" not in tf.session_state:
 
 tf.title("🛍️ DRESS ME UP 🛍️")
 
-# Sol Menü - Güvenli AI Girişi
-api_key = AIzaSyAQ.Ab8RN6J2MCIOhjUzKJ8hOcoo2ZbGgDfR9jlPV6l6oWIHBHX_HA
-if api_key:
+# 🔐 GİZLİ KASADAN ŞİFREYİ OKUMA SİSTEMİ
+try:
+    api_key = tf.secrets["GEMINI_KEY"]
     gemini.configure(api_key=api_key)
+except Exception:
+    pass
 
-# Abonelik Modeli Takibi
 total_clothes = len(tf.session_state.my_closet)
 tf.sidebar.markdown(f"### 👑 Premium Membership")
 tf.sidebar.info(f"Clothes: {total_clothes} / 10 Free Slots")
@@ -79,15 +79,11 @@ with tab2:
     durum = tf.selectbox("Where are you going?", ["School", "Coffee", "Dinner", "Party"])
     
     if tf.button("✨ Match My Outfit"):
-        if api_key:
-            # 🧠 GERÇEK YAPAY ZEKA BAĞLANTISI (Bulutta çalışır, iPad'i yormaz)
-            try:
-                model = gemini.GenerativeModel('gemini-pro')
-                prompt = f"Act as Cher Horowitz from Clueless movie. Suggest a trendy outfit match for a {secilen_parca} (Category: Outfit) for a {durum} situation. Keep it short, fabulous, and Y2K style."
-                response = model.generate_content(prompt)
-                tf.markdown(f"### 🎀 Cher's AI Recommendation:")
-                tf.write(response.text)
-            except Exception as e:
-                tf.error("AI Error: Please check your API Key.")
-        else:
-            tf.warning("⚠️ Enter your free Gemini API key in the sidebar to activate the real AI!")
+        try:
+            model = gemini.GenerativeModel('gemini-pro')
+            prompt = f"Act as Cher Horowitz from Clueless movie. Suggest a trendy outfit match for a {secilen_parca} for a {durum} situation. Keep it short, fabulous, and Y2K style."
+            response = model.generate_content(prompt)
+            tf.markdown(f"### 🎀 Cher's AI Recommendation:")
+            tf.write(response.text)
+        except Exception as e:
+            tf.error("AI Error: Configuration missing. Please check Secrets.")
